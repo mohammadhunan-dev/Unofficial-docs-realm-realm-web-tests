@@ -5,9 +5,9 @@ module.exports = {
     testEnvironment: "jsdom",
     projects: [
       {
-        displayName: "JavaScript",
+        displayName: "Web-JavaScript",
         moduleFileExtensions: ['js', 'mjs'],
- 
+
         "transform": {
             "^.+\\.js$": "babel-jest",
             "^.+\\.mjs$": "babel-jest"
@@ -16,9 +16,19 @@ module.exports = {
             "<rootDir>/jest.config.js" 
           ],
           "setupFilesAfterEnv": ["./setupTests.js"] 
-
-
-      }
+      },
+      {
+        displayName: "Web-TypeScript",
+        moduleFileExtensions: ['ts', 'js'],
+        preset: 'ts-jest/presets/js-with-ts',
+        "setupFilesAfterEnv": ["./setupTests.js"],
+        testMatch: [
+          "<rootDir>/Examples/**/*.ts",
+        ],
+        "transform": {
+          "^.+\\.ts$": "ts-jest"
+        },
+      },
     ],
 
   };
