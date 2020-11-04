@@ -1,5 +1,5 @@
 import * as Realm from "realm-web";
-import randomEmail from "random-email";
+const randomEmail = require("random-email");
 
 const email = randomEmail({ domain: "example.com" });
 const password = "Test123!";
@@ -11,26 +11,24 @@ const expectedIdentities = [
 
 const app = new Realm.App({ id: "tutsbrawl-qfxxj" });
 
-async function registerNewAccount(email, password) {
+async function registerNewAccount(email: string, password: string) {
     await app.emailPasswordAuth
       .registerUser(email, password)
       .catch((err) =>
-        console.log(
-          `An error occurred while registering: ${JSON.stringify(err, 2, null)}`
+        console.error(
+          `An error occurred while registering: ${JSON.stringify(err)}`
         )
       );
 }
 
-async function linkAccounts(user, email, password) {
+async function linkAccounts(user: Realm.User, email: string, password: string) {
     const emailPasswordUserCredentials = Realm.Credentials.emailPassword(
       email,
       password
     );
-    const linkedAccount = await user.linkCredentials(
+     await user.linkCredentials(
       emailPasswordUserCredentials
     );
-    console.log(linkedAccount);
-    return linkedAccount;
 }
 
 describe("identity linking", () => {
@@ -39,19 +37,18 @@ describe("identity linking", () => {
         const credentials = Realm.Credentials.anonymous();
 
         const user = await app.logIn(credentials);
-        console.log('user logged in :', user.id);
         await registerNewAccount(email,password)
-          .catch((e)=>console.log(`an error occurred while registering a user ${e}`));
+          .catch((e)=>console.error(`an error occurred while registering a user ${e}`));
 
 
 
-        await linkAccounts(user, email, password)
-          .catch((e) => console.log(`an error occurred while linking identities: ${e}`))
+       await linkAccounts(user, email, password)
+          .catch((e) => console.error(`an error occurred while linking identities: ${e}`))
 
-        const userIdentities = user.profile.identities.map((identityObject) => {
+        // in realm-web for typescript it is user.identities not user.profile.identities
+        const userIdentities = user.identities.map((identityObject) => {
           return identityObject.providerType;
         })
-
 
         expect(userIdentities).toStrictEqual(expectedIdentities);
 

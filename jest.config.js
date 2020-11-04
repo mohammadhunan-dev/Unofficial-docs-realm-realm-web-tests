@@ -21,9 +21,8 @@ module.exports = {
         displayName: "Web-TypeScript",
         moduleFileExtensions: ['ts', 'js'],
         preset: 'ts-jest/presets/js-with-ts',
-        "setupFilesAfterEnv": ["./setupTests.js"],
         testMatch: [
-          "<rootDir>/Examples/**/*.ts",
+          "<rootDir>/__tests__/**/*.ts",
         ],
         "transform": {
           "^.+\\.ts$": "ts-jest"
